@@ -1,0 +1,202 @@
+{
+  "project_name": "Ratio Quest",
+  "app_type": "educational_web_app",
+  "target_audience": "Year 5 (Age 10-11, UK National Curriculum Maths)",
+  "language_locale": "en-GB",
+  "archetype": "ORGANIC_AND_PLAYFUL_UTILITY",
+  "mascot": {
+    "name": "Rafi the Explorer",
+    "role": "Friendly math explorer guide",
+    "visual_style": "Warm, cheerful, hat & compass explorer motif with vector SVG avatars and expressive speech bubbles",
+    "states": ["welcoming", "thinking", "hinting", "celebrating", "guiding"]
+  },
+  "design_principles": [
+    "Fusion over Imitation: Combine botanical illustration softness with modern tactile app interaction",
+    "Emotion First: Evoke curiosity and confidence through explorer storytelling, friendly mascot Rafi, and rewarding micro-animations",
+    "Clear Hierarchy & High Legibility: Large ratio notation (e.g., 3 : 5), readable sans-serif fonts, strong contrast",
+    "Multi-sensory Feedback: Color is never the sole indicator of state—always pair green/red with icons, text labels, and patterns",
+    "Tactile Large Tap Targets: Min 48px touch zones on mobile & desktop for 10-11 year old ergonomic ease"
+  ],
+  "typography": {
+    "font_family_heading": "Outfit, Fredoka, system-ui, sans-serif",
+    "font_family_body": "Outfit, DM Sans, system-ui, sans-serif",
+    "font_family_mono_math": "JetBrains Mono, Source Code Pro, monospace",
+    "google_fonts_embed_code": "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap\" rel=\"stylesheet\">",
+    "scales": {
+      "hero_title": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight",
+      "ratio_notation": "font-mono text-3xl sm:text-4xl lg:text-5xl font-bold tracking-wider text-teal-700 dark:text-teal-300",
+      "section_heading": "text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100",
+      "card_title": "text-lg sm:text-xl font-semibold text-slate-800 dark:text-slate-100",
+      "body_text": "text-base leading-relaxed text-slate-700 dark:text-slate-300",
+      "small_label": "text-xs sm:text-sm font-medium tracking-wide uppercase text-slate-500 dark:text-slate-400"
+    }
+  },
+  "colors": {
+    "navy_dark_text_nav": "#0F172A",
+    "teal_primary": "#0D9488",
+    "teal_primary_hover": "#0F766E",
+    "teal_light_bg": "#CCFBF1",
+    "warm_yellow_rewards": "#F59E0B",
+    "warm_yellow_light": "#FEF3C7",
+    "soft_blue_lesson_bg": "#E0F2FE",
+    "soft_blue_border": "#BAE6FD",
+    "soft_green_correct": "#22C55E",
+    "soft_green_light": "#DCFCE7",
+    "soft_orange_hint": "#F97316",
+    "soft_orange_light": "#FFEDD5",
+    "neutral_grey_bg": "#F8FAFC",
+    "neutral_card_border": "#E2E8F0",
+    "neutral_dark_card": "#1E293B",
+    "counter_shapes": {
+      "red_circles": {
+        "hex": "#EF4444",
+        "bg_light": "#FEE2E2",
+        "border": "#FCA5A5",
+        "label": "Red Circles"
+      },
+      "blue_squares": {
+        "hex": "#3B82F6",
+        "bg_light": "#DBEAFE",
+        "border": "#93C5FD",
+        "label": "Blue Squares"
+      },
+      "yellow_triangles": {
+        "hex": "#EAB308",
+        "bg_light": "#FEF9C3",
+        "border": "#FDE047",
+        "label": "Yellow Triangles"
+      },
+      "green_diamonds": {
+        "hex": "#10B981",
+        "bg_light": "#D1FAE5",
+        "border": "#6EE7B7",
+        "label": "Green Diamonds"
+      }
+    }
+  },
+  "layout_and_navigation": {
+    "desktop_header": "Fixed top bar with glassmorphism backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 z-40 px-6 py-3",
+    "mobile_footer_nav": "Fixed bottom bar bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-slate-800 z-50 py-2 px-4 shadow-lg flex justify-around items-center md:hidden",
+    "nav_items": [
+      { "id": "home", "label": "Home", "icon": "Home" },
+      { "id": "learn", "label": "Learn", "icon": "BookOpen" },
+      { "id": "visual-lab", "label": "Visual Lab", "icon": "FlaskConical" },
+      { "id": "practice", "label": "Practice", "icon": "Layers" },
+      { "id": "games", "label": "Adventure Games", "icon": "Gamepad2" },
+      { "id": "progress", "label": "My Progress", "icon": "Award" },
+      { "id": "teacher", "label": "Teacher Corner", "icon": "GraduationCap" }
+    ],
+    "container_padding": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12"
+  },
+  "sections_breakdown": {
+    "home": {
+      "features": [
+        "Welcome Banner with Mascot Rafi introducing the ratio quest",
+        "Daily Streak & Explorer Points indicator",
+        "Interactive Quick Action Cards for Learn, Visual Lab, Games, Practice",
+        "Lesson progress summary bar"
+      ]
+    },
+    "learn": {
+      "lessons": [
+        {
+          "id": "parts-to-parts",
+          "title": "Lesson 1: Parts to Parts (a : b)",
+          "goal": "Understand how to compare one specific quantity of items directly to another quantity of items.",
+          "story": "Rafi is sorting red berries and blue blueberries in the Colour Garden. Help compare berries to blueberries!"
+        },
+        {
+          "id": "parts-to-whole",
+          "title": "Lesson 2: Parts to Whole (a : Total)",
+          "goal": "Learn how one group of items compares to the entire total collection.",
+          "story": "At the Fruit Market stall, Rafi packs fruit baskets. Compare the number of green apples to all fruits in the basket."
+        },
+        {
+          "id": "whole-to-part",
+          "title": "Lesson 3: Whole to Part (Total : b)",
+          "goal": "Master comparing the total collection size back to a single specific part.",
+          "story": "Inside the Treasure Cave, Rafi counts total glowing gems compared to gold coins."
+        }
+      ],
+      "lesson_components": [
+        "Lesson Goal badge",
+        "Rafi Explorer Story box",
+        "Interactive Visual Diagram with shape toggles",
+        "Worked Example with step-by-step breakdown",
+        "Guided Interactive Activity with live checks",
+        "Misconception Feedback popover",
+        "Mastery Check mini-quiz"
+      ]
+    },
+    "visual_lab": {
+      "counter_board": "4 color/shape counter pools (Red Circles R, Blue Squares B, Yellow Triangles Y, Green Diamonds G) with big +/- stepper controls",
+      "comparison_selector": "Dropdown / Tabs to compare: Part to Part (R:B), Part to Whole (R:Total), Whole to Part (Total:B), etc.",
+      "live_ratio": "Dynamic crisp display formatted as `a : b` alongside simplified ratio",
+      "dynamic_sentence": "Sentence generator: 'For every {X} Red Circles, there are {Y} Blue Squares.'",
+      "build_the_ratio": "Two-slot interactive drag-or-click input slot to complete target ratios"
+    },
+    "practice": {
+      "question_bank_count": 60,
+      "categories": ["Parts to Parts", "Parts to Whole", "Whole to Part", "Word Problems", "Mixed Challenge"],
+      "features": [
+        "Filter tabs & difficulty tags (Easy, Medium, Explorer)",
+        "Step-by-step hint panel powered by Mascot Rafi",
+        "Instant visual check with explanation",
+        "Localstorage progress saving",
+        "Printable sheet trigger"
+      ]
+    },
+    "games": {
+      "adventure_zones": [
+        { "name": "Colour Garden", "type": "Visual ratio color matching" },
+        { "name": "Fruit Market", "type": "Recipe proportions & basket assembly" },
+        { "name": "Treasure Cave", "type": "Gem ratios & vault unlocking" }
+      ],
+      "minigames": [
+        "Ratio Detective (Find & fix the wrong comparison)",
+        "Build the Basket (Add items to reach exact target ratio)",
+        "Choose the Comparison (Identify part:part vs part:whole vs whole:part)",
+        "Fix the Mistake (Correct Rafi's draft ratio calculations)"
+      ]
+    },
+    "my_progress": {
+      "features": [
+        "Mastery Percentage gauge",
+        "Explorer Rank & Badge Collection (12 unlockable badges)",
+        "Total XP / Stars earned",
+        "Daily streak record tracker",
+        "Reset / Export local storage progress"
+      ]
+    },
+    "teacher_corner": {
+      "features": [
+        "Year 5 UK Curriculum alignment overview",
+        "Misconception guide matrix with teaching strategies",
+        "Printable Practice Sheet generator with preview modal & printable layout (include answer key toggle)"
+      ]
+    }
+  },
+  "image_urls": {
+    "mascot_avatar": "https://images.unsplash.com/photo-1554342321-0776d282ceac?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "fruit_market_banner": "https://images.unsplash.com/photo-1567131349667-933eb56baec0?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "learning_maths": "https://images.unsplash.com/photo-1611957082126-061f655ef1fb?crop=entropy&cs=srgb&fm=jpg&q=85"
+  },
+  "component_guidelines": {
+    "buttons": "Always use rounded-xl or rounded-2xl, min height 48px, active:scale-95 transition-all, primary buttons in teal (#0D9488) with white text",
+    "cards": "bg-white dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow",
+    "modals_and_drawers": "Use Shadcn Dialog / Sheet with backdrop-blur-sm bg-slate-900/50",
+    "ratio_badges": "font-mono font-bold bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 px-3 py-1.5 rounded-xl border border-teal-200 dark:border-teal-800"
+  },
+  "accessibility_and_testing": {
+    "motion": "Support prefers-reduced-motion in tailwind and framer-motion transitions",
+    "color_independence": "All correct/incorrect or shape indicators must have dual representations (icon + text label + color)",
+    "data_testid_convention": "All interactive buttons, inputs, tabs, counters, and answer slots MUST include data-testid (e.g. data-testid=\"counter-red-plus-button\", data-testid=\"nav-learn-link\", data-testid=\"practice-answer-submit-button\")"
+  },
+  "instructions_to_main_agent": [
+    "Ensure all user interactions support LocalStorage persistence seamlessly.",
+    "Use British English throughout the UI ('Colour', 'Maths', 'Market', 'Organise', 'Favour').",
+    "Include clear data-testid attributes on every interactive element.",
+    "Make the ratio visualizer dynamic and responsive with instant feedback.",
+    "Implement the printable sheet generator cleanly for classroom export."
+  ]
+}

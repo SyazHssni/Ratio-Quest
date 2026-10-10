@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 204 60% 98%;
+        --foreground: 222 47% 11%;
+        --card: 0 0% 100%;
+        --card-foreground: 222 47% 11%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 222 47% 11%;
+        --primary: 175 84% 32%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 199 89% 94%;
+        --secondary-foreground: 222 47% 11%;
+        --muted: 210 40% 96%;
+        --muted-foreground: 215 19% 35%;
+        --accent: 48 96% 89%;
+        --accent-foreground: 222 47% 11%;
+        --destructive: 0 72% 51%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 214 32% 88%;
+        --input: 214 32% 85%;
+        --ring: 175 84% 32%;
+        --radius: 1rem;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-family: "Outfit", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.05) 1px, transparent 0);
+        background-size: 22px 22px;
+    }
+    h1, h2, h3, .font-heading {
+        font-family: "Fredoka", "Outfit", system-ui, sans-serif;
+    }
+    ::selection {
+        background: #fde68a;
+        color: #0f172a;
+    }
+    :focus-visible {
+        outline: 3px solid #0d9488;
+        outline-offset: 3px;
+        border-radius: 10px;
+    }
+}
+
+.ratio-mono {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    white-space: nowrap;
+}
+
+.rq-card {
+    @apply bg-white rounded-3xl border border-slate-200 shadow-[0_4px_0_0_rgba(15,23,42,0.06)];
+}
+
+.rq-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 min-h-[52px] px-7 rounded-2xl bg-teal-600 text-white font-bold text-lg shadow-[0_4px_0_0_#115e59] hover:bg-teal-700 active:translate-y-[2px] active:shadow-[0_2px_0_0_#115e59] disabled:bg-slate-300 disabled:shadow-none disabled:text-slate-600 disabled:cursor-not-allowed;
+    transition: background-color 150ms, transform 100ms, box-shadow 100ms;
+}
+
+.rq-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 min-h-[48px] px-5 rounded-2xl bg-white text-slate-800 font-semibold border-2 border-slate-200 hover:border-teal-500 hover:text-teal-800 disabled:opacity-50;
+    transition: border-color 150ms, color 150ms;
+}
+
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@keyframes rq-pop {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.rq-enter {
+    animation: rq-pop 320ms ease-out both;
+}
+
+@media print {
+    body { background: white; }
+    body * { visibility: hidden; }
+    .print-area, .print-area * { visibility: visible; }
+    .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
+}
