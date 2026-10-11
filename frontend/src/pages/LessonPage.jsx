@@ -186,7 +186,7 @@ export default function LessonPage() {
           Start this lesson from the beginning
         </button>
       )}
-      <div className="rq-card p-4 sm:p-8 bg-sky-50/40" key={step}>
+      <div className="rq-card rq-question-enter p-4 sm:p-8 bg-sky-50/40" key={step}>
         {step === TOTAL - 1 ? <Complete lesson={lesson} /> : <LessonBody lesson={lesson} step={step} go={go} />}
       </div>
     </div>

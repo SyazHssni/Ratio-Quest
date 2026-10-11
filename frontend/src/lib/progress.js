@@ -8,7 +8,7 @@ export const defaultProgress = () => ({
   zones: {},
   games: {},
   final: { attempts: 0, best: null, last: null, passed: false },
-  practice: { answered: 0, correct: 0 },
+  practice: { answered: 0, correct: 0, recentQuestionIds: [] },
   points: 0,
   awarded: {},
   badges: [],
@@ -87,6 +87,14 @@ export const recordAnswer = (s, qid, { correct, attempts }) => {
   const pts = attempts === 0 ? 10 : 5;
   return awardOnce({ ...s, practice: { answered: s.practice.answered + 1, correct: s.practice.correct + 1 } }, `q:${qid}`, pts);
 };
+
+export const recordPracticeSession = (s, questionIds) => ({
+  ...s,
+  practice: {
+    ...s.practice,
+    recentQuestionIds: [...new Set([...(questionIds || []), ...(s.practice.recentQuestionIds || [])])].slice(0, 40),
+  },
+});
 
 export const recordMisconception = (s, cat) =>
   !cat || cat === "correct" ? s : { ...s, misconceptions: { ...s.misconceptions, [cat]: (s.misconceptions[cat] || 0) + 1 } };

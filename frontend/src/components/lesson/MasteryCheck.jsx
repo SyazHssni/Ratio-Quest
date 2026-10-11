@@ -5,6 +5,7 @@ import { RafiSays } from "../rq/Rafi";
 import { buildMasterySet, lessonMasteryResult, TYPE_NAMES } from "../../lib/mastery";
 import { useProgress } from "../../context/ProgressContext";
 import { recordMastery } from "../../lib/progress";
+import { useAudio } from "../../audio/AudioContext";
 
 function OrderReview({ onDone }) {
   return (
@@ -12,13 +13,13 @@ function OrderReview({ onDone }) {
       <h3 className="font-heading text-xl font-semibold text-slate-900">Quick review: the order matters</h3>
       <p className="text-slate-800">Read the question. The thing named FIRST gives the first number. The thing named SECOND gives the second number.</p>
       <div className="flex flex-wrap items-center gap-3 text-lg font-semibold">
-        <span className="rounded-xl bg-white border-2 border-slate-300 px-3 py-2">"red <strong>to</strong> blue"</span>
+        <span className="rounded-xl bg-white border-2 border-slate-300 px-3 py-2">"🍎 <strong>to</strong> 🍌"</span>
         <ArrowRight aria-hidden="true" />
-        <span className="rounded-xl bg-white border-2 border-slate-300 px-3 py-2">Red first, then Blue</span>
+        <span className="rounded-xl bg-white border-2 border-slate-300 px-3 py-2">Apples first, then bananas</span>
         <ArrowRight aria-hidden="true" />
         <span className="ratio-mono rounded-xl bg-white border-2 border-teal-500 px-3 py-2">2 : 3</span>
       </div>
-      <p className="text-slate-800">"Blue to red" swaps them: <span className="ratio-mono font-bold">3 : 2</span>. Same balls, different question, different ratio.</p>
+      <p className="text-slate-800">"Bananas to apples" swaps them: <span className="ratio-mono font-bold">3 : 2</span>. Same fruits, different question, different ratio.</p>
       <button type="button" className="rq-btn-primary" onClick={onDone} data-testid="order-review-done">
         I've got it
       </button>
@@ -28,12 +29,14 @@ function OrderReview({ onDone }) {
 
 export function MasteryCheck({ type, onPassed, onReviewWorked }) {
   const { update } = useProgress();
+  const { playSound } = useAudio();
   const [phase, setPhase] = useState("intro");
   const [set, setSet] = useState(null);
   const [result, setResult] = useState(null);
   const [reviewDone, setReviewDone] = useState(false);
 
   const start = () => {
+    playSound("levelStart");
     setSet(buildMasterySet(type));
     setResult(null);
     setReviewDone(false);
@@ -41,6 +44,7 @@ export function MasteryCheck({ type, onPassed, onReviewWorked }) {
   };
   const done = (answers) => {
     const r = lessonMasteryResult(type, answers);
+    playSound(r.passed ? "achievement" : "levelComplete");
     update((s) => recordMastery(s, type, r));
     setResult(r);
     setPhase("result");
@@ -59,7 +63,7 @@ export function MasteryCheck({ type, onPassed, onReviewWorked }) {
 
   const needReview = result.needsOrderReview && !reviewDone;
   return (
-    <div className="space-y-5" data-testid="mastery-result" aria-live="polite">
+    <div className="rq-summary-enter space-y-5" data-testid="mastery-result" aria-live="polite">
       <p className="font-heading text-2xl font-semibold text-slate-900" data-testid="mastery-score">
         You scored {result.score} out of {result.total}.
       </p>

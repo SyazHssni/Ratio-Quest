@@ -5,16 +5,20 @@ import { PageTitle } from "../components/rq/AppShell";
 import { QuestionRunner } from "../components/rq/QuestionRunner";
 import { RafiSays } from "../components/rq/Rafi";
 import { useProgress } from "../context/ProgressContext";
-import { isLessonUnlocked, allCoreMastered, setLastActivity } from "../lib/progress";
+import { isLessonUnlocked, allCoreMastered, setLastActivity, recordPracticeSession } from "../lib/progress";
 import { questionsFor, QUESTION_BANK } from "../data/questionBank";
-import { pickRandom } from "../lib/random";
+import { selectPracticeQuestions } from "../lib/random";
 import { TYPE_NAMES } from "../lib/mastery";
+import { useAudio } from "../audio/AudioContext";
+import { useCourse } from "../context/CourseContext";
+import { Year6Practice } from "./Year6Activities";
 
 const TOPICS = [...Object.entries(TYPE_NAMES).map(([id, name]) => ({ id, name })), { id: "mixed", name: "Mixed Practice" }];
 const LEVELS = ["all", "easy", "medium", "challenging"];
 
-export default function PracticePage() {
+function Year5PracticePage() {
   const { progress, update } = useProgress();
+  const { playSound } = useAudio();
   const [params, setParams] = useSearchParams();
   const [level, setLevel] = useState("all");
   const [session, setSession] = useState(null);
@@ -23,12 +27,16 @@ export default function PracticePage() {
   const unlocked = (id) => (id === "mixed" ? allCoreMastered(progress) : isLessonUnlocked(progress, id));
 
   const start = () => {
+    playSound("levelStart");
     const pool = (topic === "mixed" ? QUESTION_BANK : questionsFor(topic)).filter((q) => level === "all" || q.difficulty === level);
-    setSession({ id: Date.now(), questions: pickRandom(pool, Math.min(6, pool.length)) });
+    const id = Date.now();
+    const questions = selectPracticeQuestions(pool, Math.min(6, pool.length), id, progress.practice.recentQuestionIds || []);
+    setSession({ id, questions });
     setSummary(null);
-    update((s) => setLastActivity(s, `/practice?topic=${topic}`, `Practice: ${TOPICS.find((t) => t.id === topic).name}`));
+    update((s) => setLastActivity(recordPracticeSession(s, questions.map((q) => q.id)), `/practice?topic=${topic}`, `Practice: ${TOPICS.find((t) => t.id === topic).name}`));
   };
   const done = (results) => {
+    playSound("levelComplete");
     setSummary({ firstTry: results.filter((r) => r.correct).length, total: results.length });
     setSession(null);
   };
@@ -67,9 +75,11 @@ export default function PracticePage() {
             </p>
           )}
           {summary && (
-            <RafiSays testid="practice-summary">
-              You finished! {summary.firstTry} of {summary.total} correct on the first try. Every question you fixed after a hint counts too. Want another round?
-            </RafiSays>
+            <div className="rq-summary-enter">
+              <RafiSays testid="practice-summary">
+                You finished! {summary.firstTry} of {summary.total} correct on the first try. Every question you fixed after a hint counts too. Want another round?
+              </RafiSays>
+            </div>
           )}
         </div>
       )}
@@ -80,4 +90,9 @@ export default function PracticePage() {
       )}
     </div>
   );
+}
+
+export default function PracticePage() {
+  const { year } = useCourse();
+  return year === "year6" ? <Year6Practice /> : <Year5PracticePage />;
 }

@@ -1,60 +1,55 @@
-// Item registry: every item has colour + icon + letter so colour is never the only cue.
-export const ITEMS = {
-  red: { singular: "red counter", plural: "red counters", short: "Red", icon: "Circle", letter: "R", tone: "red" },
-  blue: { singular: "blue counter", plural: "blue counters", short: "Blue", icon: "Square", letter: "B", tone: "blue" },
-  yellow: { singular: "yellow counter", plural: "yellow counters", short: "Yellow", icon: "Triangle", letter: "Y", tone: "yellow" },
-  green: { singular: "green counter", plural: "green counters", short: "Green", icon: "Diamond", letter: "G", tone: "green" },
-  redBall: { singular: "red ball", plural: "red balls", short: "Red", icon: "Circle", letter: "R", tone: "red" },
-  blueBall: { singular: "blue ball", plural: "blue balls", short: "Blue", icon: "Square", letter: "B", tone: "blue" },
-  greenStar: { singular: "green star", plural: "green stars", short: "Green", icon: "Star", letter: "G", tone: "green" },
-  yellowStar: { singular: "yellow star", plural: "yellow stars", short: "Yellow", icon: "Star", letter: "Y", tone: "yellow" },
-  apple: { singular: "apple", plural: "apples", short: "Apples", icon: "Apple", letter: "A", tone: "red" },
-  banana: { singular: "banana", plural: "bananas", short: "Bananas", icon: "Banana", letter: "B", tone: "yellow" },
-  pencil: { singular: "pencil", plural: "pencils", short: "Pencils", icon: "Pencil", letter: "P", tone: "blue" },
-  eraser: { singular: "eraser", plural: "erasers", short: "Erasers", icon: "Eraser", letter: "E", tone: "pink" },
-  gem: { singular: "gem", plural: "gems", short: "Gems", icon: "Gem", letter: "G", tone: "purple" },
-  coin: { singular: "coin", plural: "coins", short: "Coins", icon: "Coins", letter: "C", tone: "yellow" },
-  flower: { singular: "flower", plural: "flowers", short: "Flowers", icon: "Flower", letter: "F", tone: "pink" },
-  leaf: { singular: "leaf", plural: "leaves", short: "Leaves", icon: "Leaf", letter: "L", tone: "green" },
-  cookie: { singular: "cookie", plural: "cookies", short: "Cookies", icon: "Cookie", letter: "C", tone: "orange" },
-  sweet: { singular: "sweet", plural: "sweets", short: "Sweets", icon: "Candy", letter: "S", tone: "pink" },
-  car: { singular: "toy car", plural: "toy cars", short: "Cars", icon: "Car", letter: "C", tone: "blue" },
-  bike: { singular: "toy bike", plural: "toy bikes", short: "Bikes", icon: "Bike", letter: "B", tone: "green" },
-  fish: { singular: "fish", plural: "fish", short: "Fish", icon: "Fish", letter: "F", tone: "orange" },
-  shell: { singular: "shell", plural: "shells", short: "Shells", icon: "Shell", letter: "S", tone: "purple" },
-  cherry: { singular: "cherry", plural: "cherries", short: "Cherries", icon: "Cherry", letter: "C", tone: "red" },
-  grape: { singular: "grape", plural: "grapes", short: "Grapes", icon: "Grape", letter: "G", tone: "purple" },
-  redApple: { singular: "red apple", plural: "red apples", short: "Red", icon: "Apple", letter: "R", tone: "red" },
-  greenApple: { singular: "green apple", plural: "green apples", short: "Green", icon: "Apple", letter: "G", tone: "green" },
+// Shared, vetted Unicode object library. Lessons and the lab use these objects;
+// the emoji is presentation only and every answer is calculated from counts.
+const rows = [
+  ["apple","Apple","🍎","Fruits","high"],["greenApple","Green apple","🍏","Fruits","high"],["pear","Pear","🍐","Fruits","medium"],["orange","Orange","🍊","Fruits","high"],["lemon","Lemon","🍋","Fruits","medium"],["banana","Banana","🍌","Fruits","high"],["watermelon","Watermelon","🍉","Fruits","high"],["grapes","Grape","🍇","Fruits","high"],["strawberry","Strawberry","🍓","Fruits","high"],["blueberry","Blueberry","🫐","Fruits","medium"],["cherries","Cherry","🍒","Fruits","high"],["peach","Peach","🍑","Fruits","medium"],["mango","Mango","🥭","Fruits","high"],["pineapple","Pineapple","🍍","Fruits","high"],["coconut","Coconut","🥥","Fruits","medium"],["kiwi","Kiwi fruit","🥝","Fruits","medium"],["avocado","Avocado","🥑","Fruits","medium"],["tomato","Tomato","🍅","Vegetables","high"],["carrot","Carrot","🥕","Vegetables","high"],["corn","Corn","🌽","Vegetables","high"],["broccoli","Broccoli floret","🥦","Vegetables","high"],["cucumber","Cucumber","🥒","Vegetables","medium"],["potato","Potato","🥔","Vegetables","high"],["mushroom","Mushroom","🍄","Vegetables","high"],["bread","Bread","🍞","Food","high"],["egg","Egg","🥚","Food","high"],["cheese","Cheese","🧀","Food","high"],["chicken","Chicken drumstick","🍗","Food","high"],["burger","Burger","🍔","Food","high"],["fries","Serving of chips","🍟","Food","high"],["pizza","Pizza slice","🍕","Food","high"],["sandwich","Sandwich","🥪","Food","high"],["rice","Rice bowl","🍚","Food","high"],["noodles","Noodle bowl","🍜","Food","high"],["sushi","Sushi piece","🍣","Food","medium"],["cake","Cake slice","🍰","Food","high"],["cupcake","Cupcake","🧁","Food","high"],["cookie","Cookie","🍪","Food","high"],["chocolate","Chocolate bar","🍫","Food","high"],["lollipop","Lollipop","🍭","Food","high"],["icecream","Ice cream","🍦","Food","high"],["milk","Glass of milk","🥛","Drinks","high"],["juice","Juice box","🧃","Drinks","high"],["water","Water glass","🥤","Drinks","high"],
+  ["cat","Cat","🐱","Animals","high"],["dog","Dog","🐶","Animals","high"],["rabbit","Rabbit","🐰","Animals","high"],["hamster","Hamster","🐹","Animals","medium"],["mouse","Mouse","🐭","Animals","high"],["turtle","Turtle","🐢","Animals","high"],["frog","Frog","🐸","Animals","high"],["fish","Fish","🐟","Animals","high"],["tropicalFish","Tropical fish","🐠","Animals","medium"],["dolphin","Dolphin","🐬","Animals","high"],["whale","Whale","🐳","Animals","high"],["octopus","Octopus","🐙","Animals","high"],["crab","Crab","🦀","Animals","high"],["bee","Bee","🐝","Animals","high"],["butterfly","Butterfly","🦋","Animals","high"],["ladybug","Ladybird","🐞","Animals","high"],["snail","Snail","🐌","Animals","medium"],["bird","Bird","🐦","Animals","high"],["duck","Duck","🦆","Animals","high"],["chickenAnimal","Chicken","🐔","Animals","high"],["cow","Cow","🐮","Animals","high"],["sheep","Sheep","🐑","Animals","high"],["pig","Pig","🐷","Animals","high"],["horse","Horse","🐴","Animals","high"],["lion","Lion","🦁","Animals","high"],["tiger","Tiger","🐯","Animals","high"],["elephant","Elephant","🐘","Animals","high"],["monkey","Monkey","🐒","Animals","high"],["panda","Panda","🐼","Animals","high"],["bear","Bear","🐻","Animals","high"],["fox","Fox","🦊","Animals","high"],["penguin","Penguin","🐧","Animals","high"],["parrot","Parrot","🦜","Animals","medium"],["owl","Owl","🦉","Animals","high"],["giraffe","Giraffe","🦒","Animals","high"],["zebra","Zebra","🦓","Animals","high"],["kangaroo","Kangaroo","🦘","Animals","medium"],
+  ["pencil","Pencil","✏️","School","high"],["pen","Pen","🖊️","School","high"],["book","Book","📘","School","high"],["notebook","Notebook","📓","School","high"],["ruler","Ruler","📏","School","high"],["scissors","Pair of scissors","✂️","School","high"],["backpack","School bag","🎒","School","high"],["calculator","Calculator","🧮","School","high"],["paperclip","Paper clip","📎","School","medium"],["crayon","Crayon","🖍️","School","high"],["paintbrush","Paintbrush","🖌️","School","high"],["globe","Globe","🌍","School","high"],
+  ["car","Car","🚗","Transport","high"],["taxi","Taxi","🚕","Transport","high"],["bus","Bus","🚌","Transport","high"],["truck","Truck","🚚","Transport","high"],["tractor","Tractor","🚜","Transport","high"],["bicycle","Bicycle","🚲","Transport","high"],["scooter","Scooter","🛴","Transport","high"],["motorcycle","Motorcycle","🏍️","Transport","medium"],["train","Train","🚂","Transport","high"],["plane","Aeroplane","✈️","Transport","high"],["helicopter","Helicopter","🚁","Transport","high"],["boat","Boat","⛵","Transport","high"],["rocket","Rocket","🚀","Transport","high"],
+  ["football","Football","⚽","Sports","high"],["basketball","Basketball","🏀","Sports","high"],["tennisBall","Tennis ball","🎾","Sports","high"],["volleyball","Volleyball","🏐","Sports","medium"],["baseball","Baseball","⚾","Sports","medium"],["shuttlecock","Shuttlecock","🏸","Sports","high"],["trophy","Trophy","🏆","Sports","high"],["teddy","Teddy bear toy","🧸","Toys","high"],["balloon","Balloon","🎈","Toys","high"],["gift","Gift","🎁","Toys","high"],["kite","Kite","🪁","Toys","high"],["puzzle","Puzzle piece","🧩","Toys","high"],["dice","Die","🎲","Toys","high"],["drum","Drum","🥁","Music","high"],["guitar","Guitar","🎸","Music","high"],["flower","Flower","🌸","Plants","high"],["sunflower","Sunflower","🌻","Plants","high"],["cactus","Cactus","🌵","Plants","high"],["leaf","Leaf","🍃","Plants","high"],["coin","Coin","🪙","Everyday items","high"],["diamond","Diamond","💎","Everyday items","high"],["shell","Seashell","🐚","Sea life","high"],["key","Key","🔑","Everyday items","high"],["candle","Candle","🕯️","Everyday items","high"],["lamp","Lamp","💡","Everyday items","high"],["phone","Mobile phone","📱","Technology","high"],["laptop","Laptop","💻","Technology","high"],["camera","Camera","📷","Technology","high"],["shoe","Trainer","👟","Clothing","high"],["shirt","T-shirt","👕","Clothing","high"],["hat","Cap","🧢","Clothing","high"],["house","House","🏠","Places","high"],["tree","Tree","🌳","Places","high"],
+  ["lettuce","Lettuce","🥬","Vegetables","high"],["garlic","Garlic","🧄","Vegetables","medium"],["onion","Onion","🧅","Vegetables","high"],["peanuts","Peanut","🥜","Food","high"],["pretzel","Pretzel","🥨","Food","high"],["doughnut","Doughnut","🍩","Food","high"],["honey","Honey pot","🍯","Food","high"],["tea","Cup of tea","🍵","Drinks","high"],["bubbleTea","Bubble tea","🧋","Drinks","high"],["basket","Basket","🧺","Everyday items","high"],["bed","Bed","🛏️","Everyday items","high"],["chair","Chair","🪑","Everyday items","high"],["soap","Soap","🧼","Everyday items","high"],["sponge","Sponge","🧽","Everyday items","high"],["broom","Broom","🧹","Everyday items","high"],["alarmClock","Alarm clock","⏰","Everyday items","high"],["minibus","Minibus","🚐","Transport","high"],["fireEngine","Fire engine","🚒","Transport","high"],["ambulance","Ambulance","🚑","Transport","high"],["ship","Ship","🚢","Transport","high"],["metro","Metro train","🚇","Transport","high"],["piano","Piano","🎹","Music","high"],["violin","Violin","🎻","Music","high"],["rainbow","Rainbow","🌈","Nature","high"],["moon","Moon","🌙","Space","high"],
+].map(([key,name,emoji,category,familiarity]) => {
+  const lower = name.toLowerCase();
+  const irregular = { tomato: "tomatoes", potato: "potatoes", mouse: "mice", sheep: "sheep", fish: "fish", "tropical fish": "tropical fish", "pair of scissors": "pairs of scissors", "glass of milk": "glasses of milk", "serving of chips": "servings of chips", "sushi piece": "sushi pieces", leaf: "leaves" };
+  const plural = irregular[lower] || (/[^aeiou]y$/.test(lower) ? `${lower.slice(0, -1)}ies` : /(?:s|x|ch|sh)$/.test(lower) ? `${lower}es` : `${lower}s`);
+  return { key, emoji, name, singular: lower, plural, short: name, category, countable: true, suitableForRatio: true, familiarity };
+});
+
+export const EMOJI_LIBRARY = rows;
+const byKey = Object.fromEntries(rows.map((x) => [x.key, x]));
+const withShort = (key, short, singular, plural) => ({ ...byKey[key], short, singular, plural });
+
+// Legacy keys are kept stable for question-bank and saved lesson data.
+export const ITEMS = { ...byKey,
+  red: withShort("apple", "Apples", "apple", "apples"), blue: withShort("banana", "Bananas", "banana", "bananas"), yellow: withShort("orange", "Oranges", "orange", "oranges"), green: withShort("strawberry", "Strawberries", "strawberry", "strawberries"),
+  redBall: withShort("football", "Footballs", "football", "footballs"), blueBall: withShort("basketball", "Basketballs", "basketball", "basketballs"), greenStar: withShort("cat", "Cats", "cat", "cats"), yellowStar: withShort("dog", "Dogs", "dog", "dogs"),
+  apple: withShort("apple", "Apples", "apple", "apples"), banana: withShort("banana", "Bananas", "banana", "bananas"), pencil: withShort("pencil", "Pencils", "pencil", "pencils"), eraser: withShort("paperclip", "Paper clips", "paper clip", "paper clips"), gem: withShort("diamond", "Diamonds", "diamond", "diamonds"), coin: withShort("coin", "Coins", "coin", "coins"), flower: withShort("flower", "Flowers", "flower", "flowers"), leaf: withShort("leaf", "Leaves", "leaf", "leaves"), cookie: withShort("cookie", "Cookies", "cookie", "cookies"), sweet: withShort("lollipop", "Lollipops", "lollipop", "lollipops"), car: withShort("car", "Cars", "car", "cars"), bike: withShort("bicycle", "Bicycles", "bicycle", "bicycles"), fish: withShort("fish", "Fish", "fish", "fish"), shell: withShort("shell", "Seashells", "seashell", "seashells"), cherry: withShort("cherries", "Cherry clusters", "cherry cluster", "cherry clusters"), grape: withShort("grapes", "Grape bunches", "grape bunch", "grape bunches"), redApple: withShort("apple", "Red apples", "red apple", "red apples"), greenApple: withShort("greenApple", "Green apples", "green apple", "green apples"),
 };
 
-// Contexts pair two items with a place and a word for "the whole".
 export const CONTEXTS = {
-  balls: { place: "a box", items: ["redBall", "blueBall"], whole: "balls" },
-  counters: { place: "a bag", items: ["red", "blue"], whole: "counters" },
-  stars: { place: "a sticker sheet", items: ["greenStar", "yellowStar"], whole: "stars" },
+  balls: { place: "a ball bag", items: ["redBall", "blueBall"], whole: "balls" },
+  counters: { place: "a fruit basket", items: ["red", "blue"], whole: "fruits" },
+  stars: { place: "a pet shelter", items: ["greenStar", "yellowStar"], whole: "pets" },
   fruit: { place: "a fruit basket", items: ["apple", "banana"], whole: "fruits" },
-  stationery: { place: "a pencil case", items: ["pencil", "eraser"], whole: "items" },
-  treasure: { place: "a treasure chest", items: ["gem", "coin"], whole: "treasures" },
+  stationery: { place: "a pencil case", items: ["pencil", "paperclip"], whole: "school items" },
+  treasure: { place: "a prize box", items: ["gem", "coin"], whole: "prizes" },
   garden: { place: "a garden bed", items: ["flower", "leaf"], whole: "plants" },
   party: { place: "a party plate", items: ["cookie", "sweet"], whole: "treats" },
   toys: { place: "a toy box", items: ["car", "bike"], whole: "toys" },
-  pool: { place: "a rock pool", items: ["fish", "shell"], whole: "things" },
-  bowl: { place: "a bowl", items: ["cherry", "grape"], whole: "fruits" },
+  pool: { place: "a rock pool", items: ["fish", "shell"], whole: "rock-pool objects" },
+  bowl: { place: "a fruit bowl", items: ["cherry", "grape"], whole: "fruits" },
   apples: { place: "a basket", items: ["redApple", "greenApple"], whole: "apples" },
 };
+
 
 export const makeGroups = (ctxKey, aCount, bCount) => {
   const ctx = CONTEXTS[ctxKey];
   if (!ctx) throw new Error(`Unknown context ${ctxKey}`);
+
   return [
-    { key: ctx.items[0], count: aCount, ...ITEMS[ctx.items[0]] },
-    { key: ctx.items[1], count: bCount, ...ITEMS[ctx.items[1]] },
+    { ...ITEMS[ctx.items[0]], key: ctx.items[0], count: aCount },
+    { ...ITEMS[ctx.items[1]], key: ctx.items[1], count: bCount },
   ];
 };
-
-export const labelFor = (groups, slot, wholeWord) =>
-  slot === "whole" ? `all the ${wholeWord}` : groups.find((g) => g.key === slot).plural;
-
-export const shortLabelFor = (groups, slot, wholeWord) =>
-  slot === "whole" ? `All ${wholeWord}` : groups.find((g) => g.key === slot).plural.replace(/^./, (c) => c.toUpperCase());
+export const labelFor = (groups, slot, wholeWord) => slot === "whole" ? `all the ${wholeWord}` : groups.find((g) => g.key === slot).plural;
+export const shortLabelFor = (groups, slot, wholeWord) => slot === "whole" ? `All ${wholeWord}` : groups.find((g) => g.key === slot).short;
+export const countedObject = (group, count) => `${count} ${count === 1 ? group.singular : group.plural}`;

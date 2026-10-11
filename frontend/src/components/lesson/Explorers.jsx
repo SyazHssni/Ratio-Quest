@@ -27,7 +27,7 @@ export function CounterExplorer({ ctx = "balls", a = 2, b = 3 }) {
         </button>
       </div>
       <p className="text-lg text-slate-800" data-testid="explorer-sentence" aria-live="polite">
-        {empty ? "Add some balls to compare." : `There are ${counts[0]} ${groups[0].plural} compared with ${counts[1]} ${groups[1].plural}.`}
+        {empty ? `Add some ${groups[0].plural} or ${groups[1].plural} to compare.` : `There are ${counts[0]} ${groups[0].plural} compared with ${counts[1]} ${groups[1].plural}.`}
       </p>
       <p className="text-slate-600">Try pressing + and −. Watch the ratio change.</p>
     </div>

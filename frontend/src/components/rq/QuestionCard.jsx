@@ -9,6 +9,7 @@ import { normaliseRatioAnswer, slotValue } from "../../lib/ratio";
 import { simplerQuestion } from "../../data/questionBank";
 import { useProgress } from "../../context/ProgressContext";
 import { recordAnswer, recordHint, recordMisconception } from "../../lib/progress";
+import { useAudio } from "../../audio/AudioContext";
 
 const parseOption = (s) => s.split(":").map((x) => parseInt(x.trim(), 10));
 const lab = (q, slot) => (slot === "whole" ? `all the ${q.wholeWord}` : q.groups.find((g) => g.key === slot).plural);
@@ -37,6 +38,7 @@ const involvesWhole = (q) => q.first === "whole" || q.second === "whole";
 
 export function QuestionCard({ question, mode = "practice", onComplete, hintOpen = false, testid = "question-card" }) {
   const { update } = useProgress();
+  const { playSound } = useAudio();
   const [q, setQ] = useState(question);
   const [isSimpler, setIsSimpler] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -87,6 +89,7 @@ export function QuestionCard({ question, mode = "practice", onComplete, hintOpen
     lock.current = true;
     const { r, fb } = evaluate(q, value);
     const correct = r.category === "correct";
+    playSound(correct ? "correct" : "incorrect");
     if (!isSimpler && firstResult.current === null) firstResult.current = r.category;
     const nextHistory = [...history, r.category];
     setHistory(nextHistory);
@@ -120,6 +123,7 @@ export function QuestionCard({ question, mode = "practice", onComplete, hintOpen
   };
 
   const proceed = () => {
+    playSound("next");
     if (isSimpler) {
       setQ(question);
       setIsSimpler(false);
@@ -134,7 +138,8 @@ export function QuestionCard({ question, mode = "practice", onComplete, hintOpen
   };
 
   const wrongCount = history.filter((c) => c !== "correct").length;
-  const showWorked = status === "wrong" && (mode === "mastery" || wrongCount >= 2) && q.kind !== "meaning";
+  const showWorked = (q.difficulty === "challenging" && status !== "answering")
+    || (status === "wrong" && (mode === "mastery" || wrongCount >= 2) && q.kind !== "meaning");
   const highlight =
     status === "wrong" && result?.fb?.highlight
       ? result.fb.highlight
@@ -147,12 +152,17 @@ export function QuestionCard({ question, mode = "practice", onComplete, hintOpen
   const optionTexts = q.kind === "meaning" ? q.answerOptions.map((o) => o.text) : q.answerOptions;
 
   return (
-    <section className="space-y-5" data-testid={testid} aria-labelledby={`${testid}-prompt`}>
+    <section className="rq-question-enter space-y-5" data-testid={testid} aria-labelledby={`${testid}-prompt`}>
       {isSimpler && (
         <RafiSays testid="simpler-intro">Good effort. Let's try a simpler example together, then go back to the first question.</RafiSays>
       )}
       <div className="grid lg:grid-cols-2 gap-5 items-start">
         <div className="space-y-4">
+          {q.examStyle && (
+            <p className="inline-flex rounded-full bg-indigo-50 border border-indigo-200 px-3 py-1 text-sm font-semibold text-indigo-900" data-testid="original-exam-style-label">
+              Original exam-style reasoning question
+            </p>
+          )}
           <h2 id={`${testid}-prompt`} className="font-heading text-xl sm:text-2xl font-semibold text-slate-900 leading-snug" data-testid="question-prompt">
             {q.prompt}
           </h2>
@@ -216,7 +226,7 @@ export function QuestionCard({ question, mode = "practice", onComplete, hintOpen
           </button>
         )}
         {practice && status === "answering" && !showHint && (
-          <button type="button" className="rq-btn-secondary" onClick={() => { setShowHint(true); update(recordHint); }} data-testid="hint-btn">
+            <button type="button" className="rq-btn-secondary" onClick={() => { setShowHint(true); update(recordHint); playSound("hint"); }} data-testid="hint-btn">
             <HelpCircle size={18} aria-hidden="true" /> Show me a hint
           </button>
         )}

@@ -83,3 +83,19 @@ android-sdk/
 
 # overlay black-box crash/user-report dumps — session data, never history
 **/.emergent/recordings/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies and generated files
+node_modules/
+build/
+.cache/
+node-compile-cache/
+.jest-temp/
+.jest-tmp/
+.test-tmp/
+.audit-tmp/
+.tmp/

@@ -7,10 +7,13 @@ import { RafiSays } from "../components/rq/Rafi";
 import { useProgress } from "../context/ProgressContext";
 import { allCoreMastered, recordFinal, setLastActivity } from "../lib/progress";
 import { buildFinalSet, finalResult, TYPE_NAMES } from "../lib/mastery";
+import { useAudio } from "../audio/AudioContext";
+import { useCourse } from "../context/CourseContext";
+import { Year6Practice } from "./Year6Activities";
 
 function Results({ r, onRetry }) {
   return (
-    <div className="space-y-6" data-testid="final-results" aria-live="polite">
+    <div className="rq-summary-enter space-y-6" data-testid="final-results" aria-live="polite">
       <div className="flex items-center gap-4">
         <Trophy size={56} className={r.passed ? "text-amber-500" : "text-slate-400"} aria-hidden="true" />
         <div>
@@ -47,8 +50,9 @@ function Results({ r, onRetry }) {
   );
 }
 
-export default function FinalPage() {
+function Year5FinalPage() {
   const { progress, update } = useProgress();
+  const { playSound } = useAudio();
   const [phase, setPhase] = useState("intro");
   const [set, setSet] = useState(null);
   const [result, setResult] = useState(null);
@@ -64,6 +68,7 @@ export default function FinalPage() {
     );
 
   const start = () => {
+    playSound("levelStart");
     setSet(buildFinalSet());
     setResult(null);
     setPhase("running");
@@ -71,6 +76,7 @@ export default function FinalPage() {
   };
   const done = (answers) => {
     const r = finalResult(answers);
+    playSound(r.passed ? "achievement" : "levelComplete");
     update((s) => recordFinal(s, r));
     setResult(r);
     setPhase("result");
@@ -97,4 +103,9 @@ export default function FinalPage() {
       </div>
     </div>
   );
+}
+
+export default function FinalPage() {
+  const { year } = useCourse();
+  return year === "year6" ? <Year6Practice assessment /> : <Year5FinalPage />;
 }

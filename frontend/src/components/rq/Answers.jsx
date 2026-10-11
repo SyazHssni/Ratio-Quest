@@ -13,8 +13,8 @@ export const ChoiceAnswer = ({ options, selected, onSelect, disabled, mono = tru
           disabled={disabled}
           onClick={() => onSelect(i)}
           data-testid={`${testid}-${i}`}
-          className={`min-h-[60px] rounded-2xl border-2 px-4 py-3 font-bold text-left sm:text-center transition-colors duration-150 ${mono ? "ratio-mono text-2xl" : "text-base whitespace-normal"} ${
-            on ? "border-teal-600 bg-teal-50 text-teal-900 ring-2 ring-teal-600" : "border-slate-200 bg-white text-slate-900 hover:border-teal-400"
+          className={`rq-answer-option min-h-[60px] rounded-2xl border-2 px-4 py-3 font-bold text-left sm:text-center transition-colors duration-150 ${mono ? "ratio-mono text-2xl" : "text-base whitespace-normal"} ${
+            on ? "rq-answer-selected border-teal-600 bg-teal-50 text-teal-900 ring-2 ring-teal-600" : "border-slate-200 bg-white text-slate-900 hover:border-teal-400"
           } disabled:opacity-70`}
         >
           {on && <span className="sr-only">Selected: </span>}

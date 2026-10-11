@@ -74,6 +74,50 @@
     transition: border-color 150ms, color 150ms;
 }
 
+button, a, summary, [role="tab"], [role="radio"], [role="switch"], select, input, textarea {
+    transition-property: background-color, border-color, color, box-shadow, opacity, outline-color;
+    transition-duration: 140ms;
+    transition-timing-function: ease-out;
+}
+button:not(:disabled):active { filter: brightness(0.96); }
+button:disabled { cursor: not-allowed; }
+
+@keyframes rq-question-enter {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes rq-option-select {
+    0% { transform: scale(1); }
+    55% { transform: scale(1.025); }
+    100% { transform: scale(1); }
+}
+@keyframes rq-answer-wrong {
+    0%, 100% { transform: translateX(0); }
+    30% { transform: translateX(-3px); }
+    65% { transform: translateX(3px); }
+}
+@keyframes rq-answer-correct {
+    0% { opacity: 0.85; transform: scale(0.99); }
+    65% { opacity: 1; transform: scale(1.008); }
+    100% { transform: scale(1); }
+}
+@keyframes rq-summary-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes rq-audio-pop {
+    from { opacity: 0; transform: translateY(-4px) scale(0.99); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.rq-question-enter { animation: rq-question-enter 180ms ease-out both; }
+.rq-answer-selected { animation: rq-option-select 180ms ease-out; }
+.rq-feedback-wrong { animation: rq-answer-wrong 260ms ease-out; }
+.rq-feedback-correct { animation: rq-answer-correct 250ms ease-out; }
+.rq-summary-enter { animation: rq-summary-enter 260ms ease-out both; }
+.audio-summary::-webkit-details-marker { display: none; }
+.audio-volume { accent-color: #0d9488; }
+details[open] > section[aria-label="Audio settings"] { animation: rq-audio-pop 140ms ease-out both; }
+
 .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
@@ -87,6 +131,7 @@
         transition-duration: 0.001ms !important;
         scroll-behavior: auto !important;
     }
+    button:not(:disabled):active { filter: none; }
 }
 
 @keyframes rq-pop {

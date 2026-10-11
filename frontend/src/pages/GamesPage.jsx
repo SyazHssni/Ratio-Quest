@@ -9,7 +9,7 @@ import { isLessonUnlocked, allCoreMastered, recordZone, recordGame, setLastActiv
 import { ZONES, zoneQuestions, TYPE_NAMES } from "../lib/mastery";
 import { QUESTION_BANK, buildQuestion } from "../data/questionBank";
 import { makeGroups } from "../data/objects";
-import { pickRandom, shuffle } from "../lib/random";
+import { pickRandom, shuffle, selectPracticeQuestions } from "../lib/random";
 import NotFoundPage from "./NotFoundPage";
 
 const ZONE_ICONS = { p2p: Flower, p2w: Apple, w2p: Gem };
@@ -19,13 +19,13 @@ const additiveQuestion = () => ({
   kind: "meaning",
   showVisual: true,
   compareGroups: makeGroups("counters", 2, 3),
-  prompt: "Rafi had 2 red counters and 3 blue counters, so Red : Blue = 2 : 3. He added 1 red and 1 blue. He says the ratio of red counters to blue counters is still 2 : 3. Can you help Rafi fix the answer?",
+  prompt: "Rafi had 2 🍎 apples and 3 🍌 bananas, so apples : bananas = 2 : 3. He added 1 apple and 1 banana. He says the ratio of apples to bananas is still 2 : 3. Can you help Rafi fix the answer?",
   answerOptions: shuffle([
     { text: "Now it is 3 : 4, which is a different relationship", category: "correct" },
     { text: "It is still 2 : 3 because he added the same to both", category: "D" },
     { text: "Adding 1 to each always keeps a ratio the same", category: "D" },
   ]),
-  correctText: "Now there are 3 red and 4 blue counters: 3 : 4. Adding the same number to both groups changed the relationship, so 2 : 3 and 3 : 4 are not the same ratio.",
+  correctText: "Now there are 3 apples and 4 bananas: 3 : 4. Adding the same number to both groups changed the relationship, so 2 : 3 and 3 : 4 are not the same ratio.",
 });
 
 const basketRounds = () => {
@@ -45,11 +45,11 @@ export const GAMES = {
   detective: {
     title: "Ratio Detective",
     icon: Search,
-    desc: "Look at the picture and find the ratio that answers the question.",
+    desc: "Count the emoji objects and find the ratio that answers the question.",
     intro: "Detective time! Read each question carefully. Which ratio matches what is being compared?",
     unlock: allCoreMastered,
     lockText: "Opens after all three checkpoints.",
-    make: () => pickRandom(QUESTION_BANK.filter((q) => q.kind === "choice"), 5).map(asChoice),
+    make: () => selectPracticeQuestions(QUESTION_BANK.filter((q) => q.kind === "choice"), 5).map(asChoice),
   },
   basket: {
     title: "Build the Basket",
@@ -69,7 +69,7 @@ export const GAMES = {
     unlock: allCoreMastered,
     lockText: "Opens after all three checkpoints.",
     Round: ClassifyRound,
-    make: () => ["p2p", "p2w", "w2p", pickRandom(["p2p", "p2w", "w2p"], 1)[0]].map((t) => ({ question: pickRandom(QUESTION_BANK.filter((q) => q.comparisonType === t && q.kind !== "mistake"), 1)[0] })),
+    make: () => selectPracticeQuestions(QUESTION_BANK.filter((q) => q.kind !== "mistake"), 4).map((question) => ({ question })),
   },
   fix: {
     title: "Fix the Mistake",

@@ -5,6 +5,8 @@ import { isLessonUnlocked, allCoreMastered } from "../lib/progress";
 import { LESSONS, LESSON_ORDER } from "../data/lessons";
 import { PageTitle } from "../components/rq/AppShell";
 import { JourneyStatus } from "./HomePage";
+import { useCourse } from "../context/CourseContext";
+import Year6Page from "./Year6Page";
 
 const UNLOCKS = [
   { to: "/practice?topic=mixed", title: "Mixed Practice", desc: "All three types, mixed together.", id: "mixed" },
@@ -13,7 +15,9 @@ const UNLOCKS = [
 ];
 
 export default function LearnPage() {
+  const { year } = useCourse();
   const { progress } = useProgress();
+  if (year === "year6") return <Year6Page />;
   const allDone = allCoreMastered(progress);
   return (
     <div className="space-y-8" data-testid="learn-page">

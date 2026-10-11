@@ -10,7 +10,7 @@ export const FeedbackPanel = forwardRef(({ status, fb, worked, testid = "feedbac
       tabIndex={-1}
       role="status"
       aria-live="polite"
-      className={`rq-enter rounded-2xl border-2 p-4 sm:p-5 ${good ? "bg-green-50 border-green-400" : "bg-orange-50 border-orange-300"}`}
+      className={`rq-enter ${good ? "rq-feedback-correct" : "rq-feedback-wrong"} rounded-2xl border-2 p-4 sm:p-5 ${good ? "bg-green-50 border-green-400" : "bg-orange-50 border-orange-300"}`}
       data-testid={testid}
     >
       <div className="flex items-start gap-3">

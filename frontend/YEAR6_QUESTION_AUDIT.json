@@ -1,0 +1,49 @@
+{
+  "total": 268,
+  "parameterisedLibrary": 240,
+  "standardCounts": {
+    "7.2.1": 136,
+    "7.3.1": 132
+  },
+  "difficultyCounts": {
+    "easy": 89,
+    "medium": 90,
+    "challenging": 89
+  },
+  "categoryCounts": {
+    "simplifying-foundational": 40,
+    "simplifying-intermediate": 40,
+    "simplifying-challenging-contextual": 40,
+    "proportion-foundational": 40,
+    "proportion-intermediate": 40,
+    "proportion-challenging-contextual": 40
+  },
+  "questionTypeCounts": {
+    "emoji-counting": 25,
+    "find-the-mistake": 25,
+    "method-selection": 15,
+    "missing-number": 30,
+    "multiple-choice": 50,
+    "numeric-short-answer": 60,
+    "true-false": 35
+  },
+  "answerFormatCounts": {
+    "choice": 150,
+    "numeric": 90
+  },
+  "distinctTaskFamilies": 20,
+  "structuralSignatures": 240,
+  "duplicateIds": 0,
+  "duplicatePrompts": 0,
+  "answerAndVisualValidation": true,
+  "exampleMathChecks": {
+    "6:9 simplifies to 2:3": true,
+    "5:7 is already simplest": true,
+    "8:12 simplifies to 2:3": true,
+    "2:3 scaled by 2 gives 4:6": true,
+    "3:4 = 12:? gives 16": true,
+    "different scale factors rejected": true,
+    "8:12 is not simplest": true
+  },
+  "validationErrors": []
+}

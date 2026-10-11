@@ -1,15 +1,17 @@
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { Home, BookOpen, FlaskConical, Layers, Gamepad2, Award, GraduationCap, MoreHorizontal, Star, AlertTriangle } from "lucide-react";
+import { Home, BookOpen, FlaskConical, Layers, Award, GraduationCap, MoreHorizontal, Star, AlertTriangle } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { useProgress } from "../../context/ProgressContext";
 import { RafiAvatar } from "./Rafi";
+import { AudioControls } from "./AudioControls";
+import { useAudio } from "../../audio/AudioContext";
+import { useCourse } from "../../context/CourseContext";
 
 export const NAV = [
   { to: "/", label: "Home", icon: Home, id: "home" },
   { to: "/learn", label: "Learn", icon: BookOpen, id: "learn" },
   { to: "/lab", label: "Visual Lab", icon: FlaskConical, id: "lab" },
   { to: "/practice", label: "Practice", icon: Layers, id: "practice" },
-  { to: "/games", label: "Games", icon: Gamepad2, id: "games" },
   { to: "/progress", label: "My Progress", icon: Award, id: "progress" },
   { to: "/teacher", label: "Teacher Corner", icon: GraduationCap, id: "teacher" },
 ];
@@ -20,30 +22,42 @@ const desktopClass = ({ isActive }) =>
   }`;
 
 export function AppShell({ children }) {
-  const { progress, storageOk } = useProgress();
+  const { progress, year6Progress, storageOk } = useProgress();
+  const { playSound } = useAudio();
+  const { year, yearLabel, withYear } = useCourse();
   const loc = useLocation();
   const moreActive = ["/progress", "/teacher"].some((p) => loc.pathname.startsWith(p));
+  const navTo = (path) => path === "/" ? "/" : withYear(path);
+  const soundOnControl = (event) => {
+    const control = event.target.closest?.("button, a, [role='tab'], [role='radio'], summary");
+    if (!control || control.disabled || control.getAttribute("aria-disabled") === "true") return;
+    const namedEvent = control.dataset.audioEvent;
+    if (namedEvent === "none") return;
+    playSound(namedEvent || (control.getAttribute("role") === "radio" || control.getAttribute("role") === "tab" ? "select" : "click"));
+  };
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" onClickCapture={soundOnControl}>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-2 focus:p-3 focus:bg-white focus:rounded-xl" data-testid="skip-link">
         Skip to main content
       </a>
       <header className="no-print sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-2 sm:gap-4">
           <Link to="/" className="flex items-center gap-2 min-h-[44px]" data-testid="brand-link" aria-label="Ratio Quest home">
             <RafiAvatar size={38} />
-            <span className="font-heading text-xl font-bold text-slate-900">Ratio Quest</span>
+            <span className="font-heading text-lg sm:text-xl font-bold text-slate-900">Ratio Quest</span>
           </Link>
+          <span className="hidden md:inline-flex rounded-full bg-indigo-50 border border-indigo-200 px-3 py-1 text-sm font-semibold text-indigo-900" data-testid="active-course">{yearLabel}</span>
           <nav aria-label="Main" className="hidden lg:flex items-center gap-1" data-testid="desktop-nav">
             {NAV.map((n) => (
-              <NavLink key={n.id} to={n.to} end={n.to === "/"} className={desktopClass} data-testid={`nav-${n.id}`}>
+              <NavLink key={n.id} to={navTo(n.to)} end={n.to === "/"} className={desktopClass} data-testid={`nav-${n.id}`}>
                 <n.icon size={18} aria-hidden="true" />
                 {n.label}
               </NavLink>
             ))}
           </nav>
-          <Link to="/progress" className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-3 py-1.5 font-bold text-slate-900 text-sm" data-testid="points-chip" aria-label={`${progress.points} points. View my progress`}>
-            <Star size={16} className="text-amber-600" fill="#F59E0B" aria-hidden="true" /> {progress.points}
+          <AudioControls />
+          <Link to={withYear("/progress")} className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-3 py-1.5 font-bold text-slate-900 text-sm" data-testid="points-chip" aria-label={year === "year6" ? "Year 6 progress" : `${progress.points} points. View my progress`}>
+            <Star size={16} className="text-amber-600" fill="#F59E0B" aria-hidden="true" /> {year === "year6" ? `Y6 · ${year6Progress.correct}` : progress.points}
           </Link>
         </div>
         {!storageOk && (
@@ -62,7 +76,7 @@ export function AppShell({ children }) {
           {NAV.slice(0, 5).map((n) => (
             <NavLink
               key={n.id}
-              to={n.to}
+              to={navTo(n.to)}
               end={n.to === "/"}
               data-testid={`mnav-${n.id}`}
               className={({ isActive }) => `flex flex-col items-center justify-center min-h-[58px] min-w-[56px] px-1 text-[11px] font-semibold border-t-4 ${isActive ? "border-teal-600 text-teal-900" : "border-transparent text-slate-600"}`}
@@ -79,7 +93,7 @@ export function AppShell({ children }) {
             <DropdownMenuContent align="end" className="mb-2">
               {NAV.slice(5).map((n) => (
                 <DropdownMenuItem key={n.id} asChild>
-                  <Link to={n.to} className="min-h-[44px] flex items-center gap-2 text-base" data-testid={`mnav-${n.id}`}>
+                  <Link to={navTo(n.to)} className="min-h-[44px] flex items-center gap-2 text-base" data-testid={`mnav-${n.id}`}>
                     <n.icon size={18} aria-hidden="true" /> {n.label}
                   </Link>
                 </DropdownMenuItem>

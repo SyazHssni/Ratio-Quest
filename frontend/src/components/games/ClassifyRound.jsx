@@ -26,13 +26,13 @@ export function ClassifyRound({ question, onComplete }) {
         <p className="rounded-xl bg-green-50 border-2 border-green-400 px-4 py-2 font-semibold text-slate-900" role="status">
           Yes — {TYPE_NAMES[question.comparisonType]}. {why[question.comparisonType]} Now build the ratio.
         </p>
-        <QuestionCard question={{ ...question, kind: "build", showVisual: true }} onComplete={(r) => onComplete({ ...r, correct: r.correct && firstCorrect })} testid="classify-build" />
+        <QuestionCard question={{ ...question, kind: "build", showVisual: question.showVisual !== false }} onComplete={(r) => onComplete({ ...r, correct: r.correct && firstCorrect })} testid="classify-build" />
       </div>
     );
   return (
     <div className="space-y-4" data-testid="classify-step-type">
       <h2 className="font-heading text-xl sm:text-2xl font-semibold text-slate-900" data-testid="classify-prompt">{question.prompt}</h2>
-      <ObjectBoard groups={question.groups} wholeWord={question.wholeWord} />
+      {question.showVisual !== false && <ObjectBoard groups={question.groups} wholeWord={question.wholeWord} />}
       <p className="font-semibold text-slate-800">What kind of comparison is this?</p>
       <div role="radiogroup" aria-label="Comparison type" className="grid sm:grid-cols-3 gap-3">
         {Object.entries(TYPE_NAMES).map(([k, n]) => (

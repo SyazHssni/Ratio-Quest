@@ -13,8 +13,9 @@ frontend/src/
   lib/misconceptions.js   misconception classifier (A–H) + feedback builder
   lib/mastery.js          mastery sets, lesson + final assessment rules
   lib/progress.js         progress data model (pure reducers) + storage adapter
-  data/objects.js         item + context registry
-  data/questionBank.js    60 validated questions (20 per type), validation + simpler-question generator
+  data/objects.js         categorized emoji object library + context registry
+  data/questionBank.js    300 validated questions (100 per difficulty; 100 per ratio type), validation + simpler-question generator
+  data/questionSources.js curriculum/source register and question blueprint
   data/lessons.js         lesson content (goal, story, checks, worked/guided examples)
   components/rq/          AppShell, ObjectBoard, RatioDisplay, QuestionCard, FeedbackPanel, Answers, QuestionRunner
   components/lesson/      explorers, worked example, mastery check
@@ -34,7 +35,7 @@ yarn start
 cd frontend
 CI=true yarn test --watchAll=false src/lib
 ```
-Unit tests cover the ratio helpers (incl. boundaries/invalid input), the misconception classifier, question-bank validation (every stated answer must match the object counts), mastery/final rules and progress persistence.
+Unit tests cover ratio helpers (including boundaries and invalid input), misconception feedback, all 300 question records (counts, ratio order, labels, sources, answer choices, explanations, and difficulty coverage), mastery/final rules, seeded randomization, and progress persistence. The bank includes 30 retained direct-practice items, 30 rewritten items, and 240 new items; selected challenging items are marked as original exam-style questions, not authentic exam questions.
 
 ## Build / deploy
 ```

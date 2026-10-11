@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Trophy } from "lucide-react";
 import { QuestionRunner } from "../rq/QuestionRunner";
 import { RafiSays } from "../rq/Rafi";
+import { useAudio } from "../../audio/AudioContext";
 
 function RoundSequence({ rounds, Round, onDone, testid }) {
   const [i, setI] = useState(0);
@@ -22,14 +23,17 @@ function RoundSequence({ rounds, Round, onDone, testid }) {
 }
 
 export function GameRunner({ title, intro, makeQuestions, onFinish, hintFirst = false, Round, testid = "game" }) {
+  const { playSound } = useAudio();
   const [phase, setPhase] = useState("intro");
   const [qs, setQs] = useState(null);
   const [score, setScore] = useState(null);
   const start = () => {
+    playSound("levelStart");
     setQs({ id: Date.now(), list: makeQuestions() });
     setPhase("play");
   };
   const done = (results) => {
+    playSound("levelComplete");
     const s = results.filter((r) => r.correct).length;
     setScore({ s, total: results.length });
     onFinish(s, results.length);

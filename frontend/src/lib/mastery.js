@@ -1,5 +1,5 @@
 import { questionsFor, buildQuestion } from "../data/questionBank";
-import { CONTEXTS } from "../data/objects";
+import { CONTEXTS, countedObject } from "../data/objects";
 import { pickRandom, shuffle, seededShuffle, hashString } from "./random";
 
 export const TYPES = ["p2p", "p2w", "w2p"];
@@ -10,6 +10,7 @@ export function makeTotalQuestion(q) {
   const [A, B] = q.groups;
   const opts = [...new Set([A.count, B.count, whole, whole + 1])].slice(0, 4);
   return {
+    ...q,
     id: `${q.id}-total`,
     kind: "total",
     comparisonType: q.comparisonType,
@@ -19,9 +20,14 @@ export function makeTotalQuestion(q) {
     second: q.second,
     showVisual: true,
     tag: "whole",
-    prompt: `${q.place.charAt(0).toUpperCase() + q.place.slice(1)} has ${A.count} ${A.plural} and ${B.count} ${B.plural}. How many ${q.wholeWord} are there altogether?`,
+    prompt: `${q.place.charAt(0).toUpperCase() + q.place.slice(1)} has ${countedObject(A, A.count)} and ${countedObject(B, B.count)}. How many ${q.wholeWord} are there altogether?`,
     answerOptions: seededShuffle(opts.map(String), hashString(q.id)),
     correctTotal: whole,
+    objective: "Find the total number of objects in both groups",
+    questionFormat: "select-total",
+    reasoningSkill: "add-the-parts-once",
+    answerExplanation: `The whole is ${A.count} + ${B.count} = ${whole} ${q.wholeWord}.`,
+    solutionSteps: [`Count each group once: ${A.count} + ${B.count} = ${whole}.`, `There are ${whole} ${q.wholeWord} altogether.`],
   };
 }
 
@@ -31,6 +37,7 @@ export function makeMeaningQuestion(q) {
   const f = lab(q.first);
   const s = lab(q.second);
   return {
+    ...q,
     id: `${q.id}-meaning`,
     kind: "meaning",
     comparisonType: q.comparisonType,
@@ -40,15 +47,21 @@ export function makeMeaningQuestion(q) {
     second: q.second,
     showVisual: true,
     tag: "meaning",
-    prompt: `Rafi writes ${f} : ${s} = ${x} : ${y}. What do the two numbers stand for?`,
+    prompt: `Rafi writes ${f} : ${s} = ${x} : ${y}. What does the ratio ${x} : ${y} mean?`,
     answerOptions: seededShuffle(
       [
-        { text: `${x} counts ${f}, and ${y} counts ${s}`, category: "correct" },
-        { text: `${x} counts ${s}, and ${y} counts ${f}`, category: q.comparisonType === "p2p" ? "A" : "C" },
-        { text: `There are ${x + y} ${q.wholeWord} altogether`, category: "H" },
+        { text: `The first number, ${x}, counts ${f}; the second number, ${y}, counts ${s}.`, category: "correct" },
+        { text: `The first number, ${x}, counts ${s}; the second number, ${y}, counts ${f}.`, category: q.comparisonType === "p2p" ? "A" : "C" },
+        { text: `The ratio ${x} : ${y} is one amount that tells the total number of ${q.wholeWord}: ${x + y}.`, category: "H" },
       ],
       hashString(q.id)
     ),
+    correctText: `The ratio ${x} : ${y} means that the first number, ${x}, counts ${f}, and the second number, ${y}, counts ${s}. The order matters: ${f} come first.`,
+    hint: `Count the ${f} first, then the ${s}. The first number represents ${f}; the second represents ${s}.`,
+    answerExplanation: `The first number counts ${f}; the second number counts ${s}. The order matters.`,
+    objective: "Interpret the meaning of both terms in a ratio",
+    questionFormat: "select-explanation",
+    reasoningSkill: "interpret-ratio-order",
   };
 }
 
@@ -121,7 +134,7 @@ export function finalResult(answers) {
 }
 
 export const ZONES = [
-  { id: "p2p", name: "The Colour Garden", ctx: "garden", story: "Rafi is sorting flowers and leaves. Help him compare one group with another." },
+  { id: "p2p", name: "The Garden Grove", ctx: "garden", story: "Rafi is sorting flowers and leaves. Help him compare one group with another." },
   { id: "p2w", name: "The Fruit Market", ctx: "fruit", story: "Market stalls are packing baskets. Compare one kind of fruit with the whole basket." },
   { id: "w2p", name: "The Treasure Cave", ctx: "treasure", story: "The cave is full of gems and coins. Compare all the treasure with one kind." },
 ];

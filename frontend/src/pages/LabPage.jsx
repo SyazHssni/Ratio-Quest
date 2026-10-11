@@ -4,15 +4,16 @@ import { ObjectBoard } from "../components/rq/ObjectBoard";
 import { RatioDisplay } from "../components/rq/RatioDisplay";
 import { QuestionCard } from "../components/rq/QuestionCard";
 import { PageTitle } from "../components/rq/AppShell";
-import { ITEMS } from "../data/objects";
+import { EMOJI_LIBRARY, ITEMS } from "../data/objects";
 import { ratioFor, MAX_COUNT } from "../lib/ratio";
 import { pickRandom } from "../lib/random";
 import { useProgress } from "../context/ProgressContext";
 import { recordLab, setLastActivity } from "../lib/progress";
 import { TYPE_NAMES } from "../lib/mastery";
+import { useCourse } from "../context/CourseContext";
+import { Year6VisualLab } from "./Year6Activities";
 
-const KEYS = ["red", "blue", "yellow", "green"];
-const START = { red: 2, blue: 3, yellow: 0, green: 0 };
+const START = { apple: 2, banana: 3 };
 const noun = (g, n) => (n === 1 ? g.singular : g.plural);
 
 export function ComparisonSelector({ value, onChange }) {
@@ -49,20 +50,22 @@ const Picker = ({ label, value, options, onChange, testid, groups }) => (
   </div>
 );
 
-export default function LabPage() {
+function Year5LabPage() {
   const { progress, update } = useProgress();
   const [counts, setCounts] = useState(START);
   const [type, setType] = useState("p2p");
-  const [first, setFirst] = useState("red");
-  const [second, setSecond] = useState("blue");
-  const [part, setPart] = useState("red");
+  const [objectKeys, setObjectKeys] = useState(["apple", "banana"]);
+  const [first, setFirst] = useState("apple");
+  const [second, setSecond] = useState("banana");
+  const [part, setPart] = useState("apple");
   const [challenge, setChallenge] = useState(null);
   const [notice, setNotice] = useState("");
 
-  const groups = KEYS.map((k) => ({ key: k, count: counts[k], ...ITEMS[k] }));
+  const groups = objectKeys.map((k) => ({ key: k, count: counts[k] || 0, ...ITEMS[k] }));
   const whole = groups.reduce((t, g) => t + g.count, 0);
   const [f, s] = type === "p2p" ? [first, second] : type === "p2w" ? [part, "whole"] : ["whole", part];
-  const label = (slot) => (slot === "whole" ? "All counters" : groups.find((g) => g.key === slot).short);
+  const wholeWord = groups.map((x) => x.plural).join(" and ");
+  const label = (slot) => (slot === "whole" ? `All ${wholeWord}` : groups.find((g) => g.key === slot).short);
   const ratio = whole === 0 || (type === "p2p" && counts[first] + counts[second] === 0) ? null : ratioFor(groups, f, s);
   const highlight = type === "p2p" ? { order: [f, s], focus: [f, s] } : { order: [f, s], whole: true, focus: [part] };
 
@@ -75,15 +78,15 @@ export default function LabPage() {
   };
   const pickFirst = (k) => {
     setFirst(k);
-    if (k === second) setSecond(KEYS.find((x) => x !== k));
+    if (k === second) setSecond(objectKeys.find((x) => x !== k));
   };
 
   const g = (k) => groups.find((x) => x.key === k);
-  let sentence = "Add some counters to make a ratio.";
+  let sentence = `Add some ${wholeWord} to make a ratio.`;
   if (ratio) {
     if (type === "p2p") sentence = `There are ${ratio[0]} ${noun(g(f), ratio[0])} for every ${ratio[1]} ${noun(g(s), ratio[1])}.`;
-    else if (type === "p2w") sentence = `There are ${ratio[0]} ${noun(g(part), ratio[0])} out of ${whole} counters altogether.`;
-    else sentence = `There are ${whole} counters altogether compared with ${ratio[1]} ${noun(g(part), ratio[1])}.`;
+    else if (type === "p2w") sentence = `There are ${ratio[0]} ${noun(g(part), ratio[0])} out of ${whole} objects altogether.`;
+    else sentence = `There are ${whole} objects altogether compared with ${ratio[1]} ${noun(g(part), ratio[1])}.`;
   }
 
   const nonEmpty = groups.filter((x) => x.count > 0);
@@ -93,32 +96,42 @@ export default function LabPage() {
     const t = pickRandom(todo.length ? todo : Object.keys(TYPE_NAMES), 1)[0];
     const [p1, p2] = pickRandom(nonEmpty.map((x) => x.key), 2);
     const [cf, cs] = t === "p2p" ? [p1, p2] : t === "p2w" ? [p1, "whole"] : ["whole", p1];
-    const lab = (slot) => (slot === "whole" ? "all the counters" : g(slot).plural);
+    const lab = (slot) => (slot === "whole" ? `all the ${wholeWord}` : g(slot).plural);
     setNotice("");
     setChallenge({
       id: `lab-${Date.now()}`,
       kind: "build",
       comparisonType: t,
       groups,
-      wholeWord: "counters",
+      wholeWord,
       first: cf,
       second: cs,
       showVisual: false,
       prompt: `Build the ratio of ${lab(cf)} to ${lab(cs)}.`,
-      hint: t === "p2p" ? `Find the ${lab(cf)} card first.` : "The whole is all the counters on the board.",
-      buildCards: [...nonEmpty.map((x) => ({ id: x.key, label: x.short, value: x.count })), { id: "whole", label: "All counters", value: whole }],
+      hint: t === "p2p" ? `Find the ${lab(cf)} card first.` : `The whole is all ${wholeWord} on the board.`,
+      buildCards: [...nonEmpty.map((x) => ({ id: x.key, label: x.short, value: x.count })), { id: "whole", label: `All ${wholeWord}`, value: whole }],
     });
     update((st) => setLastActivity(st, "/lab", "Visual Lab"));
   };
 
   return (
     <div className="space-y-6" data-testid="lab-page">
-      <PageTitle title="Ratio Lab" subtitle="Add or remove counters. Choose a comparison. Watch the ratio change." testid="lab-title" />
+      <PageTitle title="Ratio Lab" subtitle="Choose emoji objects, add or remove them, and watch each comparison update." testid="lab-title" />
       <div className="rq-card p-4 sm:p-6 space-y-5">
-        <ObjectBoard groups={groups} wholeWord="counters" onChange={change} highlight={highlight} testid="lab-board" />
+        <div className="grid sm:grid-cols-2 gap-3">
+          {objectKeys.map((key, index) => <label key={index} className="space-y-1 text-sm font-bold text-slate-700">{index === 0 ? "First object" : "Second object"}<span className="block text-2xl" aria-hidden="true">{ITEMS[key].emoji}</span><select aria-label={index === 0 ? "Choose first object" : "Choose second object"} className="w-full min-h-[44px] rounded-xl border-2 border-slate-300 bg-white px-3" value={key} onChange={(event) => {
+            const nextKey = event.target.value;
+            const next = [...objectKeys]; next[index] = nextKey; setObjectKeys(next);
+            setCounts((current) => ({ ...current, [nextKey]: current[nextKey] ?? (index === 0 ? 2 : 3) }));
+            if (index === 0) { setFirst(nextKey); setPart(nextKey); if (nextKey === second) setSecond(objectKeys[1]); }
+            else { setSecond(nextKey); if (nextKey === first) { setFirst(objectKeys[0]); setPart(objectKeys[0]); } else if (part === objectKeys[1]) setPart(objectKeys[0]); }
+            setChallenge(null);
+          }}>{[...new Set(EMOJI_LIBRARY.map((item) => item.category))].map((category) => <optgroup key={category} label={category}>{EMOJI_LIBRARY.filter((item) => item.category === category).map((item) => <option key={item.key} value={item.key} disabled={objectKeys[1 - index] === item.key}>{item.emoji} {item.name}</option>)}</optgroup>)}</select></label>)}
+        </div>
+        <ObjectBoard groups={groups} wholeWord={wholeWord} onChange={change} highlight={highlight} testid="lab-board" />
         <div className="flex flex-wrap items-center gap-3">
-          <p className="font-semibold text-slate-800" data-testid="lab-whole">All counters: {groups.map((x) => x.count).join(" + ")} = {whole}</p>
-          <button type="button" className="rq-btn-secondary" onClick={() => { setCounts(START); setChallenge(null); }} data-testid="lab-reset-btn">
+          <p className="font-semibold text-slate-800" data-testid="lab-whole">All objects: {groups.map((x) => x.count).join(" + ")} = {whole}</p>
+          <button type="button" className="rq-btn-secondary" onClick={() => { setCounts(START); setObjectKeys(["apple", "banana"]); setFirst("apple"); setSecond("banana"); setPart("apple"); setType("p2p"); setChallenge(null); }} data-testid="lab-reset-btn">
             <RotateCcw size={18} aria-hidden="true" /> Reset board
           </button>
         </div>
@@ -130,11 +143,11 @@ export default function LabPage() {
           <ComparisonSelector value={type} onChange={setType} />
           {type === "p2p" ? (
             <div className="space-y-3">
-              <Picker label="First group" value={first} options={KEYS} onChange={pickFirst} testid="pick-first" groups={groups} />
-              <Picker label="Second group" value={second} options={KEYS.filter((k) => k !== first)} onChange={setSecond} testid="pick-second" groups={groups} />
+              <Picker label="First group" value={first} options={objectKeys} onChange={pickFirst} testid="pick-first" groups={groups} />
+              <Picker label="Second group" value={second} options={objectKeys.filter((k) => k !== first)} onChange={setSecond} testid="pick-second" groups={groups} />
             </div>
           ) : (
-            <Picker label="Which part?" value={part} options={KEYS} onChange={setPart} testid="pick-part" groups={groups} />
+            <Picker label="Which part?" value={part} options={objectKeys} onChange={setPart} testid="pick-part" groups={groups} />
           )}
         </div>
         <div className="rq-card p-4 sm:p-6 space-y-4" aria-live="polite">
@@ -142,7 +155,7 @@ export default function LabPage() {
           <RatioDisplay firstLabel={label(f)} secondLabel={label(s)} value={ratio} testid="lab-ratio" />
           <p className="text-lg text-slate-800" data-testid="lab-sentence">{sentence}</p>
           {ratio && (type === "p2p" ? counts[first] === 0 || counts[second] === 0 : counts[part] === 0) && (
-            <p className="text-sm text-orange-800 font-semibold" data-testid="lab-zero-note">One group has no counters yet, so its number is 0.</p>
+            <p className="text-sm text-orange-800 font-semibold" data-testid="lab-zero-note">One group has no objects yet, so its number is 0.</p>
           )}
         </div>
       </div>
@@ -165,14 +178,19 @@ export default function LabPage() {
           <QuestionCard key={challenge.id} question={challenge} onComplete={() => { update((st) => recordLab(st, challenge.comparisonType)); setChallenge(null); setNotice("Great building! Try another challenge."); }} testid="lab-challenge" />
         ) : (
           <div className="space-y-2">
-            <p className="text-slate-700">Rafi will ask for a ratio using the counters on your board. Tap the count cards to build it.</p>
+            <p className="text-slate-700">Rafi will ask for a ratio using the emoji objects on your board. Tap the count cards to build it.</p>
             <button type="button" className="rq-btn-primary" onClick={newChallenge} disabled={!canChallenge} data-testid="new-challenge-btn">
               New challenge
             </button>
-            {!canChallenge && <p className="text-sm text-slate-600" data-testid="lab-need-two">Put counters in at least two groups first.</p>}
+            {!canChallenge && <p className="text-sm text-slate-600" data-testid="lab-need-two">Add at least one object to each group first.</p>}
           </div>
         )}
       </section>
     </div>
   );
+}
+
+export default function LabPage() {
+  const { year } = useCourse();
+  return year === "year6" ? <Year6VisualLab /> : <Year5LabPage />;
 }
